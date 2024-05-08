@@ -114,18 +114,13 @@ if (property("localReleasePlugins").toBool(nullAs = false, blankAs = true, defau
 val isCiServer = System.getenv().containsKey("CI")
 
 gradleEnterprise {
-    server = "https://ge.apache.org"
+    server = "https://develocity-field.gradle.com"
     allowUntrustedServer = false
 
     buildScan {
         capture { isTaskInputFiles = true }
         isUploadInBackground = !isCiServer
         publishAlways()
-        this as BuildScanExtensionWithHiddenFeatures
-        publishIfAuthenticated()
-        obfuscation {
-            ipAddresses { addresses -> addresses.map { "0.0.0.0" } }
-        }
     }
 }
 
