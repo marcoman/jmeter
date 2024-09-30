@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.util;
 
+import io.github.pixee.security.xstream.HardeningConverter;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
@@ -1417,6 +1418,7 @@ public class JMeterUtils implements UnitTestManager {
      */
     public static final XStream createXStream() {
         XStream xstream = new XStream();
+        xstream.registerConverter(new HardeningConverter());
         JMeterUtils.setupXStreamSecurityPolicy(xstream);
         return xstream;
     }
