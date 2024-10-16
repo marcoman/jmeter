@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.resources;
 
+import io.github.pixee.security.BoundedLineReader;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,7 +69,7 @@ class ResourceKeyUsageTest {
                      InputStreamReader is = new InputStreamReader(fis, StandardCharsets.UTF_8);
                      BufferedReader fileReader = new BufferedReader(is)) {
                     String s;
-                    while ((s = fileReader.readLine()) != null) {
+                    while ((s = BoundedLineReader.readLine(fileReader, 5_000_000)) != null) {
                         if (s.matches("\\s*//.*")) { // leading comment
                             continue;
                         }

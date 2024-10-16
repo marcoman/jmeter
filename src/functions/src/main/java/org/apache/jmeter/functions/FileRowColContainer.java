@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.functions;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -76,14 +77,14 @@ public class FileRowColContainer {
         try (BufferedReader myBread =
                 Files.newBufferedReader(FileServer.getFileServer().getResolvedFile(fileName).toPath(),
                         Charset.defaultCharset())) {
-            String line = myBread.readLine();
+            String line = BoundedLineReader.readLine(myBread, 5_000_000);
             /*
              * N.B. Stop reading the file if we get a blank line: This allows
              * for trailing comments in the file
              */
             while (line != null && line.length() > 0) {
                 fileData.add(splitLine(line, delimiter));
-                line = myBread.readLine();
+                line = BoundedLineReader.readLine(myBread, 5_000_000);
             }
         } catch (IOException e) {
             fileData.clear();

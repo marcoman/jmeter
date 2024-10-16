@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.resources;
 
+import io.github.pixee.security.BoundedLineReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -100,7 +101,7 @@ public class PackageTest {
         }
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(ras, StandardCharsets.UTF_8))) {
             String s;
-            while ((s = fileReader.readLine()) != null) {
+            while ((s = BoundedLineReader.readLine(fileReader, 5_000_000)) != null) {
                 if (!s.isEmpty() && !s.startsWith("#") && !s.startsWith("!")) {
                     int equ = s.indexOf('=');
                     String key = s.substring(0, equ);

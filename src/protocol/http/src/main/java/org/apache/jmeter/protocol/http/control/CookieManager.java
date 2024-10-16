@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.protocol.http.control;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -220,7 +221,7 @@ public class CookieManager extends ConfigTestElement implements TestStateListene
         String line;
         try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
             final CollectionProperty cookies = getCookies();
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 try {
                     if (line.startsWith("#") || JOrphanUtils.isBlank(line)) {//$NON-NLS-1$
                         continue;
