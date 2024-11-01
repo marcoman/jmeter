@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.proxy;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 import java.io.File;
@@ -449,11 +451,10 @@ public class DefaultSamplerCreator extends AbstractSamplerCreator {
             Map<String, String> formEncodings) throws MalformedURLException {
         URL pageUrl;
         if(sampler.isProtocolDefaultPort()) {
-            pageUrl = new URL(sampler.getProtocol(), sampler.getDomain(), request.getPath());
+            pageUrl = Urls.create(sampler.getProtocol(), sampler.getDomain(), request.getPath(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         }
         else {
-            pageUrl = new URL(sampler.getProtocol(), sampler.getDomain(),
-                    sampler.getPort(), request.getPath());
+            pageUrl = Urls.create(sampler.getProtocol(), sampler.getDomain(), sampler.getPort(), request.getPath(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         }
         String urlWithoutQuery = request.getUrlWithoutQuery(pageUrl);
 

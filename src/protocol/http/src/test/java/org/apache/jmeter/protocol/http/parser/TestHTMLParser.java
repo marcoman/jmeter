@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.parser;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -374,9 +376,9 @@ public class TestHTMLParser extends JMeterTestCase {
         byte[] buffer = IOUtils.toByteArray(getInputStream(file));
         Iterator<URL> result;
         if (c == null) {
-            result = p.getEmbeddedResourceURLs(userAgent, buffer, new URL(url), System.getProperty("file.encoding"));
+            result = p.getEmbeddedResourceURLs(userAgent, buffer, Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), System.getProperty("file.encoding"));
         } else {
-            result = p.getEmbeddedResourceURLs(userAgent, buffer, new URL(url), c,System.getProperty("file.encoding"));
+            result = p.getEmbeddedResourceURLs(userAgent, buffer, Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), c,System.getProperty("file.encoding"));
         }
         List<String> actual = Lists.newArrayList(Iterators.transform(result, Object::toString));
         /*

@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.gui.action;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -306,7 +308,7 @@ public class ParseCurlCommandAction extends AbstractAction implements MenuCreato
         } else {
             httpSampler.setProperty(TestElement.COMMENTS, getDefaultComment());
         } // NOSONAR
-        URL url = new URL(request.getUrl());
+        URL url = Urls.create(request.getUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         httpSampler.setProtocol(url.getProtocol());
         if (url.getPort() != -1) {
             httpSampler.setPort(url.getPort());

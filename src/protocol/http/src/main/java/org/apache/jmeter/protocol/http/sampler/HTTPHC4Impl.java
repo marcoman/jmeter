@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.sampler;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -262,7 +264,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
                         continue;
                     }
                     try {
-                        URL authUrl = new URL(auth.getURL());
+                        URL authUrl = Urls.create(auth.getURL(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                         if (authUrl.getHost().equals(authScope.getHost()) && getPort(authUrl) == authScope.getPort()) {
                             return auth;
                         }
@@ -323,8 +325,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
                 if(requestURI.isAbsolute()) {
                     url = requestURI.toURL();
                 } else {
-                    url = new URL(targetHost.getSchemeName(), targetHost.getHostName(), targetHost.getPort(),
-                            requestURI.getPath());
+                    url = Urls.create(targetHost.getSchemeName(), targetHost.getHostName(), targetHost.getPort(), requestURI.getPath(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 }
                 Authorization authorization =
                         authManager.getAuthForURL(url);
@@ -722,7 +723,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
                 if (redirectURI.isAbsolute()) {
                     res.setURL(redirectURI.toURL());
                 } else {
-                    res.setURL(new URL(new URL(target.toURI()),redirectURI.toString()));
+                    res.setURL(Urls.create(Urls.create(target.toURI(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), redirectURI.toString(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
                 }
             }
 

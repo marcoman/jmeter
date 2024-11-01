@@ -20,6 +20,8 @@ package org.apache.jmeter.protocol.http.sampler;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.any;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -68,7 +70,7 @@ class TestRedirects {
             http.setAutoRedirects(false);
             server.stubFor(any(urlPathEqualTo("/some-location")).willReturn(
                     aResponse().withHeader("Location", server.url("/redirected")).withStatus(redirectCode)));
-            HTTPSampleResult res = http.sample(new URL(server.url("/some-location")), method, false, 1);
+            HTTPSampleResult res = http.sample(Urls.create(server.url("/some-location"), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), method, false, 1);
             if (shouldRedirect) {
                 Assertions.assertEquals(server.url("/redirected"), res.getRedirectLocation());
             } else {

@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.curl;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -806,7 +808,7 @@ public class BasicCurlParser {
                 } else if (option.getDescriptor().getId() == CLOption.TEXT_ARGUMENT
                         && !"CURL".equalsIgnoreCase(option.getArgument())) {
                     try {
-                        request.setUrl(new URL(option.getArgument()).toExternalForm());
+                        request.setUrl(Urls.create(option.getArgument(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toExternalForm());
                     } catch (MalformedURLException ex) {
                         LOGGER.warn("Unhandled option {}", option.getArgument());
                     }
@@ -1099,7 +1101,7 @@ public class BasicCurlParser {
                     newCookie.setValue(cookieParameters[1]);
                     URL newUrl;
                     try {
-                        newUrl = new URL(url.trim());
+                        newUrl = Urls.create(url.trim(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                         newCookie.setDomain(newUrl.getHost());
                         newCookie.setPath(newUrl.getPath());
                         cookies.add(newCookie);

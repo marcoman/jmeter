@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.visualizers.backend.influxdb;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -120,7 +122,7 @@ class HttpMetricsSender extends AbstractInfluxdbMetricsSender {
                 .disableCookieManagement()
                 .disableConnectionState()
                 .build();
-        url = new URL(influxdbUrl);
+        url = Urls.create(influxdbUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         token = influxDBToken;
         httpRequest = createRequest(url, token);
         httpClient.start();

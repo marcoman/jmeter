@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.sampler;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -88,7 +90,7 @@ public class TestDecompression {
                             )
             );
 
-            HTTPSampleResult res = http.sample(new URL(server.url("/gzip")), "GET", false, 1);
+            HTTPSampleResult res = http.sample(Urls.create(server.url("/gzip"), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), "GET", false, 1);
 
             Assertions.assertAll(
                     () -> {

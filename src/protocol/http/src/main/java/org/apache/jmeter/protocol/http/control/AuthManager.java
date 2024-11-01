@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.control;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -239,10 +241,10 @@ public class AuthManager extends ConfigTestElement implements TestStateListener,
                 // Obtain another URL with an explicit port:
                 int port = url.getProtocol().equalsIgnoreCase(HTTPConstants.PROTOCOL_HTTP) ? HTTPConstants.DEFAULT_HTTP_PORT : HTTPConstants.DEFAULT_HTTPS_PORT;
                 // only http and https are supported
-                url2 = new URL(url.getProtocol(), url.getHost(), port, url.getPath());
+                url2 = Urls.create(url.getProtocol(), url.getHost(), port, url.getPath(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             } else if ((url.getPort() == HTTPConstants.DEFAULT_HTTP_PORT && url.getProtocol().equalsIgnoreCase(HTTPConstants.PROTOCOL_HTTP))
                     || (url.getPort() == HTTPConstants.DEFAULT_HTTPS_PORT && url.getProtocol().equalsIgnoreCase(HTTPConstants.PROTOCOL_HTTPS))) {
-                url2 = new URL(url.getProtocol(), url.getHost(), url.getPath());
+                url2 = Urls.create(url.getProtocol(), url.getHost(), url.getPath(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             }
         } catch (MalformedURLException e) {
             log.error("Internal error!", e); // this should never happen

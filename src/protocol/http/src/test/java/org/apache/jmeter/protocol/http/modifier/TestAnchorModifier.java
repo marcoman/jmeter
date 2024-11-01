@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.modifier;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
@@ -360,7 +362,7 @@ public class TestAnchorModifier extends JMeterTestCase {
 
 
     private HTTPSamplerBase makeContext(String url) throws MalformedURLException {
-        URL u = new URL(url);
+        URL u = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HTTPSamplerBase context = new HTTPNullSampler();
         context.setDomain(u.getHost());
         context.setPath(u.getPath());

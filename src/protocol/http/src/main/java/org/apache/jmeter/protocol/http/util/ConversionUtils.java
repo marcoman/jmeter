@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.http.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -195,7 +197,7 @@ public class ConversionUtils {
      * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=46690">Bug 46690 - handling of 302 redirects with invalid relative paths</a>
      */
     public static URL makeRelativeURL(URL baseURL, String location) throws MalformedURLException{
-        URL initial = new URL(baseURL,location);
+        URL initial = Urls.create(baseURL, location, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
         // skip expensive processing if it cannot apply
         if (!location.startsWith("../")){// $NON-NLS-1$
@@ -206,7 +208,7 @@ public class ConversionUtils {
         if (m.lookingAt()){
             String prefix = m.group(1); // get ../ or ../../ etc.
             if (location.startsWith(prefix)){
-                return new URL(baseURL, location.substring(prefix.length()));
+                return Urls.create(baseURL, location.substring(prefix.length()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             }
         }
         return initial;
@@ -219,7 +221,7 @@ public class ConversionUtils {
      */
     public static String escapeIllegalURLCharacters(String url) throws Exception{
         String decodeUrl = URLDecoder.decode(url,StandardCharsets.UTF_8.name());
-        URL urlString = new URL(decodeUrl);
+        URL urlString = Urls.create(decodeUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         URI uri = new URI(urlString.getProtocol(), urlString.getUserInfo(),
                 urlString.getHost(), urlString.getPort(), urlString.getPath(),
                 urlString.getQuery(), urlString.getRef());

@@ -17,6 +17,8 @@
 
 package org.apache.jmeter.protocol.ftp.sampler;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -179,7 +181,7 @@ public class FTPSampler extends AbstractSampler implements Interruptible {
         final String label = getLabel();
         res.setSamplerData(label);
         try {
-            res.setURL(new URL(label));
+            res.setURL(Urls.create(label, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
         } catch (MalformedURLException e1) {
             log.warn("Cannot set URL: "+e1.getLocalizedMessage());
         }
