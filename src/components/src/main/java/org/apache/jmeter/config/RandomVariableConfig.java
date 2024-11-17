@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.config;
 
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -204,7 +205,7 @@ public class RandomVariableConfig extends ConfigTestElement
                 return new Random(seed);
             }
         }
-        return new Random();
+        return new SecureRandom();
     }
 
     /**

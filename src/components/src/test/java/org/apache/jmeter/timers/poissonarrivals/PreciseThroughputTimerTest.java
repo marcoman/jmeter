@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.timers.poissonarrivals;
 
+import java.security.SecureRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -77,7 +78,7 @@ public class PreciseThroughputTimerTest {
 
     @Test
     public void testExactNumberOfSamples() throws Exception {
-        Random rnd = new Random();
+        Random rnd = new SecureRandom();
         for (int i = 0; i < 100; i++) {
             long seed = rnd.nextLong();
             final int testDuration = rnd.nextInt(100) + 5;

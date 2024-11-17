@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.functions;
 
+import java.security.SecureRandom;
 import static org.apache.jmeter.functions.FunctionTestHelper.makeParams;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,7 +49,7 @@ public class RandomFunctionTest extends JMeterTestCase {
 
     @Test
     public void randomTest1() throws Exception {
-        Random r = new Random();
+        Random r = new SecureRandom();
         Collection<CompoundVariable> parms = makeParams("0","10000000000","VAR");
         r.setParameters(parms);
         String s = r.execute(null,null);

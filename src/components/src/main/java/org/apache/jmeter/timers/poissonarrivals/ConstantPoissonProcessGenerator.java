@@ -18,6 +18,7 @@
 package org.apache.jmeter.timers.poissonarrivals;
 
 import java.nio.DoubleBuffer;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -34,7 +35,7 @@ public class ConstantPoissonProcessGenerator implements EventProducer {
 
     private static final double PRECISION = 0.00001;
 
-    private final Random rnd = new Random();
+    private final Random rnd = new SecureRandom();
     private final ThroughputProvider throughputProvider;
     private final int batchSize;
     // TODO: implement

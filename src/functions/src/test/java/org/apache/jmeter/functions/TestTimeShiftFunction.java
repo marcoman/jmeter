@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.functions;
 
+import java.security.SecureRandom;
 import static org.apache.jmeter.functions.FunctionTestHelper.makeParams;
 import static org.exparity.hamcrest.date.LocalDateMatchers.sameDay;
 import static org.exparity.hamcrest.date.LocalDateTimeMatchers.within;
@@ -195,7 +196,7 @@ class TestTimeShiftFunction extends JMeterTestCase {
 
     @Test
     void testRandomPeriod() throws Exception {
-        Random r = new Random();
+        Random r = new SecureRandom();
         int randomInt = r.ints(1, 60).limit(1).findFirst().getAsInt();
         vars.put("random", String.valueOf(randomInt));
         Collection<CompoundVariable> params = makeParams("yyyy-MM-dd'T'HH:mm:ss", "", "PT${random}M", "");
