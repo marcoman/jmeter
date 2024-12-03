@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.junit;
 
+import io.github.pixee.security.ObjectInputFilters;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -597,6 +598,7 @@ public class JMeterTest extends JMeterTestCase {
                 out.writeObject(serObj);
                 out.close();
                 ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+                ObjectInputFilters.enableObjectFilterIfUnprotected(in);
                 Object readObject = in.readObject();
                 in.close();
                 assertEquals(
