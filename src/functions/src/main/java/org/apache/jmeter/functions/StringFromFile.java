@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.functions;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -242,14 +243,14 @@ public class StringFromFile extends AbstractFunction implements TestStateListene
 
         if (null != myBread) { // Did we open the file?
             try {
-                String line = myBread.readLine();
+                String line = BoundedLineReader.readLine(myBread, 5_000_000);
                 if (line == null) { // EOF, re-open file
                     String tn = Thread.currentThread().getName();
                     log.info("{} EOF on  file {}", tn, fileName);//$NON-NLS-1$
                     closeFile();
                     openFile();
                     if (myBread != null) {
-                        line = myBread.readLine();
+                        line = BoundedLineReader.readLine(myBread, 5_000_000);
                     } else {
                         line = ERR_IND;
                         if (myEnd != COUNT_UNUSED) {// Are we processing a file

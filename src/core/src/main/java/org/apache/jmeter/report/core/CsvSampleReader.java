@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.report.core;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
@@ -139,7 +140,7 @@ public class CsvSampleReader implements Closeable{
         try {
             SampleMetadata result;
             // Read first line
-            String line = reader.readLine();
+            String line = BoundedLineReader.readLine(reader, 5_000_000);
             this.row++;
             if (line == null) {
                 throw new IllegalArgumentException("File is empty");

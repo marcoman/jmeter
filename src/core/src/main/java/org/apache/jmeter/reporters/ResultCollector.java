@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.reporters;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -370,7 +371,7 @@ public class ResultCollector extends AbstractListenerElement implements SampleLi
         if (file.exists()) {
             try (BufferedReader dataReader = Files.newBufferedReader(file.toPath())){
                 // Get the first line, and see if it is XML
-                String line = dataReader.readLine();
+                String line = BoundedLineReader.readLine(dataReader, 5_000_000);
                 dataReader.close();
                 if (line == null) {
                     log.warn("{} is empty", filename);

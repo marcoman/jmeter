@@ -18,6 +18,7 @@
 package org.apache.jmeter.save;
 
 
+import io.github.pixee.security.BoundedLineReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -187,7 +188,7 @@ public class TestSaveService extends JMeterTestCase {
         int length = 0;
         int lines = 0;
         String line;
-        while ((line = br.readLine()) != null) {
+        while ((line = BoundedLineReader.readLine(br, 5_000_000)) != null) {
             lines++;
             if (!line.startsWith("<jmeterTestPlan")) {
                 length += line.length();
