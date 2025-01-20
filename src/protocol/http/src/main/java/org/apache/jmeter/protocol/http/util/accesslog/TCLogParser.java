@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.protocol.http.util.accesslog;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -246,7 +247,7 @@ public class TCLogParser implements LogParser {
         try {
             // read one line at a time using
             // BufferedReader
-            line = breader.readLine();
+            line = BoundedLineReader.readLine(breader, 5_000_000);
             while (line != null) {
                 if (line.length() > 0) {
                     actualCount += this.parseLine(line, el);
@@ -259,7 +260,7 @@ public class TCLogParser implements LogParser {
                 if (parseCount != -1 && actualCount >= parseCount) {
                     break;
                 }
-                line = breader.readLine();
+                line = BoundedLineReader.readLine(breader, 5_000_000);
             }
             if (line == null) {
                 breader.close();

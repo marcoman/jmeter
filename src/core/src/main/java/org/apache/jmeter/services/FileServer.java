@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.services;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -342,16 +343,16 @@ public class FileServer {
                 throw new IOException("File " + filename + " already in use");
             }
             BufferedReader reader = (BufferedReader) fileEntry.inputOutputObject;
-            String line = reader.readLine();
+            String line = BoundedLineReader.readLine(reader, 5_000_000);
             if (line == null && recycle) {
                 reader.close();
                 reader = createBufferedReader(fileEntry);
                 fileEntry.inputOutputObject = reader;
                 if (ignoreFirstLine) {
                     // read first line and forget
-                    reader.readLine();//NOSONAR
+                    BoundedLineReader.readLine(reader, 5_000_000);//NOSONAR
                 }
-                line = reader.readLine();
+                line = BoundedLineReader.readLine(reader, 5_000_000);
             }
             log.debug("Read:{}", line);
             return line;
@@ -391,7 +392,7 @@ public class FileServer {
                 fileEntry.inputOutputObject = reader;
                 if (ignoreFirstLine) {
                     // read first line and forget
-                    reader.readLine(); //NOSONAR
+                    BoundedLineReader.readLine(reader, 5_000_000); //NOSONAR
                 }
             } else if (!(fileEntry.inputOutputObject instanceof Reader)) {
                 throw new IOException("File " + alias + " already in use");
@@ -406,7 +407,7 @@ public class FileServer {
                         fileEntry.inputOutputObject = reader;
                         if (ignoreFirstLine) {
                             // read first line and forget
-                            reader.readLine(); //NOSONAR
+                            BoundedLineReader.readLine(reader, 5_000_000); //NOSONAR
                         }
                     } else { // OK, we still have some data, restore it
                         reader.reset();

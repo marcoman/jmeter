@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.protocol.http.control;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -153,7 +154,7 @@ public class HeaderManager extends ConfigTestElement implements Serializable, Re
 
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), Charset.defaultCharset())) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 try {
                     if (line.startsWith("#") || JOrphanUtils.isBlank(line)) {// $NON-NLS-1$
                         continue;

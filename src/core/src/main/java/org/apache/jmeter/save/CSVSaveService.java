@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.save;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.FileInputStream;
@@ -157,7 +158,7 @@ public final class CSVSaveService {
                 BufferedReader dataReader = new BufferedReader(inReader)) {
             dataReader.mark(400);// Enough to read the header column names
             // Get the first line, and see if it is the header
-            String line = dataReader.readLine();
+            String line = BoundedLineReader.readLine(dataReader, 5_000_000);
             if (line == null) {
                 throw new IOException(filename + ": unable to read header line");
             }
